@@ -1,7 +1,17 @@
 import './App.css'
 
-function App() {
-  return (<h1>Привет из React!</h1>)
+interface AppProps {
+  message: string;
 }
 
-export default App
+function MainTitle({ message }: AppProps) {
+  if (message === "hello") {
+    return <h1 className="hello">Приветствую!</h1>
+  }
+  else if (message === "goodbye") {
+    return <h1 className="goodbye">До скорой встречи!</h1>
+  }
+  return null;
+}
+
+export default MainTitle
