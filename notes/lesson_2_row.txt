@@ -1,0 +1,251 @@
+---
+Компонент старого стиля
+
+function SimpleOldComponent() {
+    return React.createElement('h1', null, "Old style компонент!");
+}
+
+Как это было до JSX
+
+---
+Компонент нового стиля
+
+function newStyleComponent() {
+  return <h1>New style компонент на TSX!</h1>
+}
+
+Мы используем смесь JS + HTML = JSX(TSX)
+
+---
+Мы НЕ можем сделать так, чтобы из компонента выходило больше одного HTML элемента
+Это НЕ будет работать
+
+function newStyleComponent() {
+  return  <h1>Заголовок</h1><p>Второй тег на выход из компонента - табу!</p>
+}
+
+---
+Но это можно обойти - овернём общим div-ом!
+
+function newStyleComponent() {
+  return  <div><h1>Заголовок</h1><p>Второй тег на выход из компонента - табу! Но мы можем обвернуть это общим тегом!</p></div>
+}
+
+---
+Пример входных данных для компонента (Пропс - properties - свойста)
+
+interface AppProps {
+  message: string;
+}
+
+function SimpleTyping(message : AppProps) {
+    return <p>Текст сообщения {message.message}</p>
+}
+---
+
+Однако так делать не всегда удобно. Поэтому мы можем воспользоваться деструктуризацией
+
+function SimpleTyping({message} : AppProps) {
+    return <p>Текст сообщения {message}</p>
+}
+
+---
+Деструктуризация может помочь, когда у нас БОЛЬШЕ чем один props на входе
+
+interface AppProps {
+    name: string;
+    message: string;
+}
+
+function SimpleTyping({name, message} : AppProps) {
+    return <p>Привет {name}! Текст сообщения {message}</p>
+}
+
+---
+Интерфейс для списка продуктов и компонент который через map возвращает список
+
+interface ShopList {
+    productList: string[]
+    // productList: Array<string>
+}
+
+function ShopListComponent ( {productList}: ShopList) {
+    return (
+        <ul>
+            {productList.map(product => (
+                <li>{product}</li>
+            ))}
+        </ul>
+    )
+}
+---
+
+Пример с рендером списка продуктов
+
+// main.tsx
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import {MainTitle, ShopListComponent} from './App.tsx'
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <MainTitle message="hello" />
+    <ShopListComponent productList={["Банан", "Апельсин", "Апельсин"]} />
+
+  </StrictMode>,
+)
+
+// app.tsx
+
+interface ShopList {
+    productList: string[]
+    // productList: Array<string>
+}
+
+export function ShopListComponent ( {productList}: ShopList) {
+    return (
+        <ul>
+            {productList.map(product => (
+                <li>{product}</li>
+            ))}
+        </ul>
+    )
+}
+---
+Стилизация происходит через className
+
+export function ShopListComponent ( {productList}: ShopList) {
+    return (
+        <ul className='productList'>
+            {productList.map(product => (
+                <li>{product}</li>
+            ))}
+        </ul>
+    )
+}
+
+---
+Пример обработчика "on..." в TSX - они пишутся в camelCaseStyle - и главное!
+Мы должны передать ссылку на функцию (а не сделать ее вызов - в нашем примере это ссылка на стрелку)
+
+export function SimpleButton(){
+    return (
+        <button onClick={() => console.log("Был сделан тыц!")}>Тыц!</button>
+    )
+}
+
+---
+Пример работы с событием клик. Мы вынесли функцию и объявляем ее заранее + добавили точную аннотацию типа (без него будет работать, но так точнее)
+
+import React from 'react';
+
+export function SimpleButton(){
+    const handleClick = (event: React.MouseEvent) => {
+        console.log("Тип события", event.type)
+        console.log("Элемент события", event.target)
+    }
+    
+    return (
+        <button onClick={handleClick}>Тыц!</button>
+    )
+}
+---
+Пример компонента - карточки пользователя
+
+import './App.css'
+import React from 'react'
+
+export function UserCard() {
+    // 1. Объект с данными пользователя
+    const userData = {
+        name: "Гендальф Белый",
+        email: "balrog-is-dead@mail.ru",
+        description: "Люблю запах свежепрожаренных Балрогов по утрам!"
+    }
+
+    // 2. Создаем функцию-обработчик кнопки
+    const handleClick = (event: React.MouseEvent) => {
+        console.log("Кнопка была нажата!")
+        console.log(`Анкета ${userData.email}`)
+    }
+
+    // 3. Возвращаем TSX размтку
+    return (
+        <div className='card'>
+            <h2 className='cardTitle'>Пользователь: {userData.name}</h2>
+            <p className='cardText'>Описание: {userData.description}</p>
+            <button className='cardButton' onClick={handleClick}>Кнопка</button>
+        </div>
+    )
+}
+---
+ПРИМЕР КАРТОЧЕК ПЕРСОНАЖЕЙ ВЛАСТЕЛИНА КОЛЕЦ
+Визуально - все очень сильно будет различатся от содержимого App.css!
+// Датасет персонажей Властелина Колец
+// src/data.ts
+export const lotrCharacters = [
+    {
+        name: "Гендальф Белый",
+        email: "balrog-is-dead@mail.ru",
+        description: "Люблю запах свежепрожаренных Балрогов по утрам!"
+    },
+    {
+        name: "Фродо Бэггинс",
+        email: "ring-bearer@hobbiton.sh",
+        description: "Хожу пешком по всему Средиземью. Очень дорого обходится обувь!"
+    },...
+
+
+// src/types.ts
+
+export interface Character {
+    name: string;
+    email: string;
+    description: string;
+}
+
+
+// src/App.tsx
+import './App.css'
+import React from 'react'
+import type {Character} from './types'; // Импорт интерфейса
+
+
+export function UserCard({ character }: { character: Character }) {
+
+    // 2. Создаем функцию-обработчик кнопки
+    const handleClick = (event: React.MouseEvent) => {
+        console.log("Кнопка была нажата!")
+        console.log(`Анкета ${character.email}`)
+    }
+
+    // 3. Возвращаем TSX размтку
+    return (
+        <div className='card'>
+            <h2 className='cardTitle'>Пользователь: {character.name}</h2>
+            <p className='cardText'>Описание: {character.description}</p>
+            <button className='cardButton' onClick={handleClick}>Кнопка</button>
+        </div>
+    )
+}
+
+// src/main.tsx
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import {UserCard} from './App.tsx'
+import { lotrCharacters } from './data.ts'; // Импортируем данные
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <div className="cards-container">
+     {/* Здесь мы используем .map() */}
+        {lotrCharacters.map((char) => (
+            <UserCard key={char.email} character={char} />
+        ))}
+    </div>
+  </StrictMode>,
+)
+
+---
