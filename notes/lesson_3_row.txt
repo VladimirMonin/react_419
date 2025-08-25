@@ -1,0 +1,355 @@
+---
+// lesson_3.tsx
+// Пример однонаправленного потока данных в React. Мы рендерим основной компонент и он использует дочерний передает туда данные
+
+
+// Интерфейс для пропса
+interface UserAvatarProps {
+    src: string;
+    alt: string;
+}
+
+
+// Дочерний компонент принимает props
+export function UserAvatar(props: UserAvatarProps) {
+    return(
+        <div>
+            {/* Используем данные props */}
+            <img src={props.src} alt={props.alt} style={{ width:100, height:100, borderRadius: "50"}} />
+        </div>
+    )
+}
+
+// Родительский компонент который передает props
+export function UserProfile() {
+    const UserData = {
+        altText: "Аватар Пользователя",
+        avatarUrl: "https://i.pravatar.cc/150"
+    }
+
+    return(
+        <div>
+            <h1>Профиль Пользователя</h1>
+            {/* Передаем данные в дочерний компонент через props */}
+            <UserAvatar src={UserData.avatarUrl} alt={UserData.altText}/>
+        </div>
+    )}
+---
+// Пример передачи простых типов данных: string и number
+interface ProductProps {
+  name: string;
+  price: number;
+}
+
+export function Product({ name, price }: ProductProps) {
+  return (
+    <div>
+      <h3>{name}</h3>
+      <p>Цена: {price} руб.</p>
+    </div>
+  );
+}
+
+// Использование:
+// <Product name="Ноутбук" price={50000} />
+// <Product name="Мышь" price={1500} />
+---
+// Boolean props и условный рендеринг
+interface StatusIndicatorProps {
+  isOnline: boolean;
+}
+
+export function StatusIndicator({ isOnline }: StatusIndicatorProps) {
+  return (
+    <div>
+      {/* Тернарный оператор для выбора между двумя вариантами */}
+      {isOnline ? (
+        <span style={{ color: 'green' }}>🟢 Онлайн</span>
+      ) : (
+        <span style={{ color: 'red' }}>🔴 Оффлайн</span>
+      )}
+      
+      {/* Логический оператор && для условного отображения */}
+      {isOnline && <div style={{ fontSize: '12px', color: 'gray' }}>Пользователь активен</div>}
+      
+      {/* Короткая запись boolean props */}
+      {/* <StatusIndicator isOnline /> вместо <StatusIndicator isOnline={true} /> */}
+    </div>
+  );
+}
+
+// Пример использования:
+// <StatusIndicator isOnline={true} />
+// <StatusIndicator isOnline={false} />
+// <StatusIndicator isOnline /> (короткая запись для true)
+---
+// Работа с массивами: рендеринг списков с ключами
+interface TagListProps {
+  tags: string[];
+}
+
+export function TagList({ tags }: TagListProps) {
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+      {tags.map((tag, index) => (
+        <span 
+          key={index} // В реальном приложении лучше использовать уникальный id
+          style={{ 
+            margin: '4px', 
+            padding: '4px 8px', 
+            background: '#e9ecef', 
+            borderRadius: '12px',
+            fontSize: '12px'
+          }}
+        >
+          #{tag}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+// Пример использования:
+// <TagList tags={['фантастика', 'комедия', 'приключения']} />
+---
+// Передача объекта целиком как prop
+interface UserCardProps {
+  user: {
+    name: string;
+    age: number;
+    avatar: string;
+    email: string;
+  };
+}
+
+export function UserCard({ user }: UserCardProps) {
+  return (
+    <div style={{ 
+      border: '1px solid #ccc', 
+      padding: '16px', 
+      borderRadius: '8px',
+      maxWidth: '300px'
+    }}>
+      <img 
+        src={user.avatar} 
+        alt={user.name}
+        style={{ 
+          width: '50px', 
+          height: '50px', 
+          borderRadius: '50%',
+          marginBottom: '12px'
+        }}
+      />
+      <h3>{user.name}</h3>
+      <p>Возраст: {user.age}</p>
+      <p>Email: {user.email}</p>
+    </div>
+  );
+}
+
+// Пример использования с двойными фигурными скобками {{...}}:
+// <UserCard user={{ name: 'Анна', age: 30, avatar: 'https://i.pravatar.cc/150?img=1', email: 'anna@example.com' }} />
+---
+// Функции-колбэки для уведомления родительского компонента
+interface ButtonProps {
+  onClick: () => void;
+  children: React.ReactNode;
+  variant?: 'primary' | 'secondary';
+}
+
+export function Button({ onClick, children, variant = 'primary' }: ButtonProps) {
+  const buttonStyle = {
+    primary: {
+      background: '#007bff',
+      color: 'white',
+      border: 'none',
+      padding: '8px 16px',
+      borderRadius: '4px',
+      cursor: 'pointer'
+    },
+    secondary: {
+      background: '#6c757d',
+      color: 'white',
+      border: 'none',
+      padding: '8px 16px',
+      borderRadius: '4px',
+      cursor: 'pointer'
+    }
+  };
+
+  return (
+    <button 
+      onClick={onClick}
+      style={buttonStyle[variant]}
+    >
+      {children}
+    </button>
+  );
+}
+
+// Пример использования в родительском компоненте:
+// function ParentComponent() {
+//   const handleButtonClick = () => {
+//     console.log('Кнопка была нажата!');
+//   };
+//
+//   return (
+//     <Button onClick={handleButtonClick} variant="primary">
+//       Нажми меня
+//     </Button>
+//   );
+// }
+---
+// Композиция компонентов с props.children
+interface CardWrapperProps {
+  children: React.ReactNode;
+  title?: string;
+}
+
+export function CardWrapper({ children, title }: CardWrapperProps) {
+  return (
+    <div style={{
+      border: '1px solid #ddd',
+      borderRadius: '8px',
+      padding: '16px',
+      margin: '8px',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      backgroundColor: 'white'
+    }}>
+      {title && <h3 style={{ marginTop: 0, marginBottom: '12px' }}>{title}</h3>}
+      {children}
+    </div>
+  );
+}
+
+// Примеры использования:
+// 1. Оборачивание простого текста
+// <CardWrapper>Просто какой-то текст внутри карточки</CardWrapper>
+
+// 2. Оборачивание нескольких элементов
+// <CardWrapper title="Профиль пользователя">
+//   <p>Имя: Иван Иванов</p>
+//   <p>Email: ivan@example.com</p>
+//   <Button onClick={() => console.log('Редактировать')}>Редактировать</Button>
+// </CardWrapper>
+
+// 3. Оборачивание других компонентов
+// <CardWrapper>
+//   <UserCard user={{ name: 'Анна', age: 30, avatar: '...', email: '...' }} />
+// </CardWrapper>
+---
+// Полный комплексный пример: ProductCard с TypeScript
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  image: string;
+}
+
+interface ProductCardProps {
+  product: Product;
+  isNew?: boolean;
+  tags?: string[];
+  onAddToCart: (productId: number) => void;
+}
+
+export function ProductCard({ product, isNew = false, tags = [], onAddToCart }: ProductCardProps) {
+  return (
+    <CardWrapper>
+      {/* Бейдж "Новинка" с условным рендерингом */}
+      {isNew && (
+        <span style={{
+          background: '#28a745',
+          color: 'white',
+          padding: '4px 8px',
+          borderRadius: '12px',
+          fontSize: '12px',
+          position: 'absolute',
+          top: '8px',
+          right: '8px'
+        }}>
+          Новинка!
+        </span>
+      )}
+      
+      {/* Изображение товара */}
+      <img 
+        src={product.image} 
+        alt={product.name}
+        style={{ 
+          width: '100%', 
+          height: '200px', 
+          objectFit: 'cover',
+          borderRadius: '4px',
+          marginBottom: '12px'
+        }}
+      />
+      
+      {/* Информация о товаре */}
+      <h3 style={{ margin: '0 0 8px 0' }}>{product.name}</h3>
+      <p style={{ margin: '0 0 8px 0', color: '#666' }}>{product.description}</p>
+      
+      {/* Цена */}
+      <p style={{ 
+        margin: '0 0 12px 0', 
+        fontSize: '18px', 
+        fontWeight: 'bold',
+        color: '#007bff'
+      }}>
+        {product.price} руб.
+      </p>
+      
+      {/* Теги товара (массив) */}
+      {tags.length > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>
+          {tags.map((tag, index) => (
+            <span 
+              key={index}
+              style={{
+                background: '#e9ecef',
+                padding: '2px 6px',
+                borderRadius: '8px',
+                fontSize: '11px'
+              }}
+            >
+              #{tag}
+            </span>
+          ))}
+        </div>
+      )}
+      
+      {/* Кнопка с функцией-колбэком */}
+      <Button 
+        onClick={() => onAddToCart(product.id)}
+        variant="primary"
+        style={{ width: '100%' }}
+      >
+        В корзину
+      </Button>
+    </CardWrapper>
+  );
+}
+
+// Пример использования:
+ function App() {
+   const handleAddToCart = (productId: number) => {
+     console.log(`Товар ${productId} добавлен в корзину`);
+   };
+
+   return (
+     <ProductCard
+       product={{
+         id: 1,
+         name: 'Смартфон',
+         price: 29999,
+         description: 'Мощный смартфон с отличной камерой',
+         image: 'https://example.com/phone.jpg'
+       }}
+       isNew={true}
+       tags={['электроника', 'смартфон', 'новинка']}
+       onAddToCart={handleAddToCart}
+     />
+   );
+ }
+---
