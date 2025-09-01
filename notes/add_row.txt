@@ -1,0 +1,223 @@
+npm install bootstrap bootstrap-icons react-bootstrap
+
+
+в main.tsx - импорт
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
+
+Сделаем тест 
+ <button className="btn btn-dark">Купить Хлебушек</button>
+
+
+Еще один тест
+<button className="btn btn-danger"><i className="bi bi-shop"></i></button>
+
+
+Интерфейс
+export type BSColors = "dark" | "warning" | "danger" | "info" | "primary" | "success"
+
+export interface ButtonProps {
+    color: BSColors
+    icon: string
+    title: string
+    btnType: "textButton" | "iconButton"
+}
+
+
+ЭТО НЕ БУДЕТ РАБОТАТЬ
+export function StandartButton(props: ButtonProps) {
+    return (
+        <button className={`btn btn-${props.color}`}>
+            {/* Вветвление - тип кнопки */}
+            if {props.btnType === "textButton"} {
+                {props.title}
+            } else {
+                <i className={`bi bi-${props.icon}`}></i>
+            }
+            
+        </button>
+        
+    )}
+
+НАШ ВАРИАНТ
+export function StandartButton(props: ButtonProps) {
+    let content;
+    if (props.btnType === "textButton") {
+        content = props.title
+        
+    } else {
+        content = <i className={`bi bi-${props.icon}`}></i>
+        
+    }
+    return (
+        <button className={`btn btn-${props.color} text-danger`}>
+            {content}
+        </button>
+        
+    )}
+
+
+------------
+ПОЛУЧИЛОСЬ ТАК 
+
+export type BSColors = "dark" | "warning" | "danger" | "info" | "primary" | "success"
+
+export interface ButtonProps {
+    BGcolor: BSColors
+    textColor: BSColors
+    icon: string
+    title: string
+    btnType: "textButton" | "iconButton"
+
+}
+
+export function StandartButton(props: ButtonProps) {
+    let content;
+    if (props.btnType === "textButton") {
+        content = props.title
+        
+    } else {
+        content = <i className={`bi bi-${props.icon}`}></i>
+        
+    }
+    return (
+        <button className={`btn btn-${props.BGcolor} text-${props.textColor}`}>
+            {content}
+        </button>
+        
+    )}
+
+// Группа кнопок в BS5 базовой карточки из документации https://bootstrap-5.ru/docs/5.3/components/card/
+export function SipmpleButtonsGroup(){
+    return (
+<div className="card">
+    <div className="card-body">
+        <h5 className="card-title">Набор кнопок</h5>
+        <h6 className="card-subtitle mb-2 text-body-secondary">На самом деле это один компонент кнопки!</h6>
+        <p className="card-text">Небольшой пример переиспользуемости компонента <code>StandartButton</code> с разными параметрами <code>Props</code></p>
+        
+        {/* Контейнер для кнопок с flex выравниванием BS5 классами */}
+
+        <div className="d-flex gap-2 flex-wrap justify-content-center">
+            <StandartButton BGcolor="dark" icon="eye-fill" title="Посмотреть" btnType="iconButton" textColor="danger"/>
+            <StandartButton BGcolor="warning" icon="basket-fill" title="Добавить в корзину" btnType="iconButton" textColor=""/>
+            <StandartButton BGcolor="danger" icon="heart-fill" title="Отложить в избранное" btnType="iconButton" textColor=""/>
+            <StandartButton BGcolor="info" icon="share" title="Поделится" btnType="iconButton" textColor="dark"/>
+            <StandartButton BGcolor="dark" icon="eye-fill" title="Посмотреть" btnType="textButton" textColor="danger"/>
+        </div>
+
+        {/* <StandartButton color="dark" icon="shop" title="Купить хлебушек" btnType="iconButton"/> */}
+   
+    </div>
+</div>
+    )
+}
+
+---------
+
+export function SipmpleButtonsGroup(){
+    const handleButtonClick = () => {
+        alert(`ТЫЦ!!!!!!!!!`)
+    }
+    return (
+<div className="card">
+    <div className="card-body">
+        <h5 className="card-title">Набор кнопок</h5>
+        <h6 className="card-subtitle mb-2 text-body-secondary">На самом деле это один компонент кнопки!</h6>
+        <p className="card-text">Небольшой пример переиспользуемости компонента <code>StandartButton</code> с разными параметрами <code>Props</code></p>
+        
+        {/* Контейнер для кнопок с flex выравниванием BS5 классами */}
+
+        <div className="d-flex gap-2 flex-wrap justify-content-center">
+            <StandartButton BGcolor="dark" icon="eye-fill" title="Посмотреть" btnType="iconButton" textColor="danger"/>
+            <StandartButton BGcolor="warning" icon="basket-fill" title="Добавить в корзину" btnType="iconButton" textColor=""/>
+            <StandartButton BGcolor="danger" icon="heart-fill" title="Отложить в избранное" btnType="iconButton" textColor=""/>
+            <StandartButton BGcolor="info" icon="share" title="Поделится" btnType="iconButton" textColor="dark"/>
+            {/* НЕПРАВИЛЬНО! */}
+            <StandartButton onClick={handleButtonClick} BGcolor="dark" icon="eye-fill" title="Посмотреть" btnType="textButton" textColor="danger"/>
+        </div>
+
+        {/* <StandartButton color="dark" icon="shop" title="Купить хлебушек" btnType="iconButton"/> */}
+   
+    </div>
+</div>
+    )
+}
+
+
+---
+Логика обычно лежит в других файлах
+Мы сделали тоже так lesson_3.txt
+
+// Урок 3 ts
+// Пара функций которые ничего не принемают ничего не отдают. Просто печаюат в консоль или алерт
+
+export function printHello() {
+    alert("hello!")
+}
+
+export function cosoleLogHello() {
+   console.log("hello!")
+}
+
+
+import {printHello, cosoleLogHello} from './lesson_3'
+
+
+export type BSColors = "dark" | "warning" | "danger" | "info" | "primary" | "success"
+
+
+export interface ButtonProps {
+    BGcolor: BSColors
+    textColor: BSColors
+    icon: string
+    title: string
+    btnType: "textButton" | "iconButton"
+    onClick: () => void
+
+}
+
+export function StandartButton(props: ButtonProps) {
+    let content;
+    if (props.btnType === "textButton") {
+        content = props.title
+        
+    } else {
+        content = <i className={`bi bi-${props.icon}`}></i>
+        
+    }
+    return (
+        <button onClick={props.onClick} className={`btn btn-${props.BGcolor} text-${props.textColor}`}>
+            {content}
+        </button>
+        
+    )}
+
+// Группа кнопок в BS5 базовой карточки из документации https://bootstrap-5.ru/docs/5.3/components/card/
+export function SipmpleButtonsGroup(){
+    return (
+<div className="card">
+    <div className="card-body">
+        <h5 className="card-title">Набор кнопок</h5>
+        <h6 className="card-subtitle mb-2 text-body-secondary">На самом деле это один компонент кнопки!</h6>
+        <p className="card-text">Небольшой пример переиспользуемости компонента <code>StandartButton</code> с разными параметрами <code>Props</code></p>
+        
+        {/* Контейнер для кнопок с flex выравниванием BS5 классами */}
+
+        <div className="d-flex gap-2 flex-wrap justify-content-center">
+            <StandartButton BGcolor="dark" icon="eye-fill" title="Посмотреть" btnType="iconButton" textColor="danger" onClick={printHello}/>
+            <StandartButton BGcolor="warning" icon="basket-fill" title="Добавить в корзину" btnType="iconButton" textColor="" onClick={printHello}/>
+            <StandartButton BGcolor="danger" icon="heart-fill" title="Отложить в избранное" btnType="iconButton" textColor="" onClick={printHello}/>
+            <StandartButton BGcolor="info" icon="share" title="Поделится" btnType="iconButton" textColor="dark" onClick={printHello}/>
+            <StandartButton BGcolor="dark" icon="eye-fill" title="Посмотреть" btnType="textButton" textColor="danger" onClick={printHello}/>
+        </div>
+
+        {/* <StandartButton color="dark" icon="shop" title="Купить хлебушек" btnType="iconButton"/> */}
+   
+    </div>
+</div>
+    )
+}
+
+---
