@@ -8,9 +8,15 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import {ShopListComponent, products, StandartButton, SipmpleButtonsGroup} from './lesson_4.tsx'
 import { CounterButton, LikeDislike, ShowHideText, ControlledInput, ProductFilter} from './lesson_5.tsx';
+
+import { ButtonContainer,  LikeDislikeContainer, LikeDislikeContainerWithText} from './lesson_6.tsx';
 // Урок 3
 // import {UserProfile} from "./lesson_3.tsx"
 
+import { AppLevel1, ControlledInputLevel1 } from './lesson_7/level_1.tsx';
+
+// import {AppLevel2} from './lesson_7/level_2/App.tsx';
+import {AppLevel3} from './lesson_7/level_3/App.tsx';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     {/* <MainTitle message="hello" />
@@ -29,6 +35,15 @@ createRoot(document.getElementById('root')!).render(
     <ShowHideText />
     <ControlledInput />
     <ProductFilter />
+
+    {/* <ButtonContainer /> */}
+    <LikeDislikeContainer />
+    <LikeDislikeContainerWithText />
+    <AppLevel1 />
+
+    <ControlledInputLevel1 />
+    {/* <AppLevel2 /> */}
+    <AppLevel3 />
   </StrictMode>,
 )
 

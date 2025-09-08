@@ -1,0 +1,29 @@
+.card {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 300px;
+  min-width: 200px;
+}
+
+.card-title {
+  font-size: 1.5em;
+  margin: 10px 0;
+}
+
+.card-text {
+  font-size: 1em;
+  margin: 10px 0;
+}
+
+img {
+  height: 250px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.card-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
