@@ -14,6 +14,7 @@ import { ButtonContainer,  LikeDislikeContainer, LikeDislikeContainerWithText} f
 // import {UserProfile} from "./lesson_3.tsx"
 
 import { AppLevel1, ControlledInputLevel1 } from './lesson_7/level_1.tsx';
+import { App } from './lesson_8/App.tsx';
 
 // import {AppLevel2} from './lesson_7/level_2/App.tsx';
 import {AppLevel3} from './lesson_7/level_3/App.tsx';
@@ -23,10 +24,10 @@ createRoot(document.getElementById('root')!).render(
     <ShopListComponent productList={["Банан", "Апельсин", "Апельсин"]} />
     <SimpleButton />
     <UserProfile /> */}
-    <ShopListComponent productList={products} />
+    {/* <ShopListComponent productList={products} /> */}
 
     {/* Тест кнопки в разных вариантах */}
-    <StandartButton color="warning" icon="basket-fill" title="Купить Хлебушек" btnType='iconButton' />
+    {/* <StandartButton color="warning" icon="basket-fill" title="Купить Хлебушек" btnType='iconButton' />
 
     <SipmpleButtonsGroup/>
     <LikeDislike />
@@ -34,16 +35,17 @@ createRoot(document.getElementById('root')!).render(
     <CounterButton />
     <ShowHideText />
     <ControlledInput />
-    <ProductFilter />
+    <ProductFilter /> */}
 
     {/* <ButtonContainer /> */}
-    <LikeDislikeContainer />
+    {/* <LikeDislikeContainer />
     <LikeDislikeContainerWithText />
     <AppLevel1 />
 
-    <ControlledInputLevel1 />
+    <ControlledInputLevel1 /> */}
     {/* <AppLevel2 /> */}
-    <AppLevel3 />
+    {/* <AppLevel3 /> */}
+    <App />
   </StrictMode>,
 )
 
