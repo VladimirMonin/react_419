@@ -14,7 +14,8 @@ import { ButtonContainer,  LikeDislikeContainer, LikeDislikeContainerWithText} f
 // import {UserProfile} from "./lesson_3.tsx"
 
 import { AppLevel1, ControlledInputLevel1 } from './lesson_7/level_1.tsx';
-import { App } from './lesson_8/App.tsx';
+// import { App } from './lesson_8/App.tsx';
+import { App } from './lesson_9/app.tsx';
 
 // import {AppLevel2} from './lesson_7/level_2/App.tsx';
 import {AppLevel3} from './lesson_7/level_3/App.tsx';
