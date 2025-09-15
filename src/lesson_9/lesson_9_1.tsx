@@ -42,8 +42,24 @@ interface CurrencyContextType {
     setCurrency: (currency: string) => void;
 }
 
-// Создаем контекст
+// Интерфейс для товара в корзине
+interface CartItemInCart {
+    id: number;
+    title: string;
+    price: { amount: number; currency: string }[];
+    quantity: number;
+}
+
+// Интерфейс для контекста корзины
+interface CartContextType {
+    cartItems: CartItemInCart[];
+    addToCart: (product: CartItem) => void;
+    clearCart: () => void;
+}
+
+// Создаем контексты
 export const CurrencyContext = createContext<CurrencyContextType | null>(null);
+export const CartContext = createContext<CartContextType | null>(null);
 
 // Интерфейс для товара
 export interface CartItem {
@@ -61,8 +77,18 @@ export function ProductCard({ product }: { product: CartItem }) {
     const currencyContext = useContext(CurrencyContext);
     const currentCurrency = currencyContext?.currency || 'USD';
     
+    // Получаем функции корзины из контекста
+    const cartContext = useContext(CartContext);
+    
     // Находим цену для текущей валюты
     const currentPrice = product.price.find(p => p.currency === currentCurrency);
+    
+    // Функция добавления в корзину
+    const handleAddToCart = () => {
+        if (cartContext) {
+            cartContext.addToCart(product);
+        }
+    };
     
     return (
         <div className="card" style={{ width: '18rem', margin: '10px' }}>
@@ -71,7 +97,7 @@ export function ProductCard({ product }: { product: CartItem }) {
                 <h5 className="card-title">{product.title}</h5>
                 <p className="card-text">{product.text}</p>
                 <p>Текущая цена: {currentPrice?.amount} {currentCurrency}</p>
-                <button className="btn btn-primary">В корзину</button>
+                <button className="btn btn-primary" onClick={handleAddToCart}>В корзину</button>
                 
                 
                 {/* Выпадашка смены валюты */}
@@ -84,3 +110,74 @@ export function ProductCard({ product }: { product: CartItem }) {
         </div>
     );
 };
+
+// Компонент корзины
+export function Cart() {
+    // Получаем текущую валюту из контекста
+    const currencyContext = useContext(CurrencyContext);
+    const currentCurrency = currencyContext?.currency || 'USD';
+    
+    // Получаем корзину из контекста
+    const cartContext = useContext(CartContext);
+    
+    if (!cartContext) {
+        return <div>Корзина не инициализирована</div>;
+    }
+    
+    const { cartItems, clearCart } = cartContext;
+    
+    // Вычисляем общую стоимость
+    const totalAmount = cartItems.reduce((total, item) => {
+        const priceInCurrentCurrency = item.price.find(p => p.currency === currentCurrency);
+        return total + (priceInCurrentCurrency?.amount || 0) * item.quantity;
+    }, 0);
+    
+    return (
+        <div style={{ 
+            border: '2px solid #007bff', 
+            borderRadius: '8px', 
+            padding: '20px', 
+            margin: '20px',
+            backgroundColor: '#f8f9fa'
+        }}>
+            <h2>🛒 Корзина</h2>
+            
+            {cartItems.length === 0 ? (
+                <p>Корзина пуста</p>
+            ) : (
+                <>
+                    <div>
+                        {cartItems.map(item => {
+                            const priceInCurrentCurrency = item.price.find(p => p.currency === currentCurrency);
+                            return (
+                                <div key={item.id} style={{ 
+                                    padding: '10px', 
+                                    border: '1px solid #ddd', 
+                                    borderRadius: '4px',
+                                    margin: '5px 0',
+                                    backgroundColor: 'white'
+                                }}>
+                                    <h4>{item.title}</h4>
+                                    <p>Количество: {item.quantity}</p>
+                                    <p>Цена за штуку: {priceInCurrentCurrency?.amount} {currentCurrency}</p>
+                                    <p><strong>Сумма: {(priceInCurrentCurrency?.amount || 0) * item.quantity} {currentCurrency}</strong></p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    
+                    <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#e9ecef', borderRadius: '4px' }}>
+                        <h3>Общая сумма: {totalAmount} {currentCurrency}</h3>
+                        <button 
+                            className="btn btn-danger" 
+                            onClick={clearCart}
+                            style={{ marginTop: '10px' }}
+                        >
+                            Очистить корзину
+                        </button>
+                    </div>
+                </>
+            )}
+        </div>
+    );
+}
